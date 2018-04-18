@@ -8,6 +8,7 @@
     <div id="census-app">
       <div class="">
         <h1>Hi!</h1>
+        <h2>This is a simple example of a SPA</h2>
       </div>
       <div class="">
         <select v-model="selected" v-on:change="updateList">
@@ -26,7 +27,7 @@
         </div>
       </div>
       <div class="">
-        <table>
+        <table border="1">
           <thead>
             <tr>
               <th>Value</th>
