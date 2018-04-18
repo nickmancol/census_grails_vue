@@ -87,7 +87,7 @@ environments:
     test:
         dataSource:
             dbCreate: update
-            url: '${JDBC_CONNECTION_STRING}'
+            url: jdbc:sqlite:./us-census-test.db
     production:
         dataSource:
             dbCreate: none

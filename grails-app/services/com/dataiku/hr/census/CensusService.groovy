@@ -49,37 +49,40 @@ class CensusService {
       ,"salary range"
     ]
 
-    def canQuery(String field) {
-      return colMapping.containsKey(field)
+    private Sql sql() {
+        new Sql(dataSource)
     }
 
-    def query(String field, int offset = 0, int limit = 100){
+    def canQuery(String field) {
+      return colMapping.contains(field.toLowerCase())
+    }
+
+    def query(String field, int limit = 100){
         def res = []
         def total = 1
         //TODO: horrible way to validate, fix it
-        if( !colMapping.contains( field.toLowerCase() ) ){
+        if( !canQuery( field ) ){
           field = "Column not available, using global count"
         } else {
           total = countRows(field)
-          print(total)
         }
 
         def queryStr = """select "${field}" value, count(*) num, avg(age) average
           from census_learn_sql
           group by "${field}"
           order by num desc"""
-        def sql = new Sql(dataSource)
+        Sql sql = sql()
         //TODO: change to add pagination
-        sql.eachRow(queryStr, offset, limit) {
+        sql.eachRow(queryStr, 0, limit) {
           res.add(['value':it.value?:'n/a', 'num':it.num, 'average':it.average?:'n/a'])
         }
 
-        return [results:res, limit:limit, offset:offset, total:total]
+        return [results:res, limit:limit, total:total]
     }
 
     def countRows(String field){
         def queryStr = """select count(*) total from (select distinct("${field}") from census_learn_sql)"""
-        def sql = new Sql(dataSource)
+        Sql sql = sql()
         sql.rows(queryStr).first().total
     }
 }

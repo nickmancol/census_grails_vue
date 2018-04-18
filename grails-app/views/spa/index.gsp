@@ -53,9 +53,10 @@
           selected: 'select', total: 0, limit:0, offset:0
           , options: []
           , results: []
+          , source : '/census'
         }, created: function () {
           this.updateList();
-          this.$http.get('/census').then(response => {
+          this.$http.get(this.source).then(response => {
               for (var i = 0; i < response.body.length; i++) {
                 this.options.push({'value':response.body[i], 'text':response.body[i]});
               }
@@ -65,12 +66,11 @@
           );
         }, methods: {
           updateList: function(){
-            var url = '/census/'+this.selected;
+            var url = this.source+'/'+this.selected;
             this.$http.get(url).then(response => {
                 this.results = [];
                 this.total = response.body.total;
                 this.limit = response.body.limit;
-                this.offset = response.body.offset;
                 for (var i = 0; i < response.body.results.length; i++) {
                   var row = response.body.results[i];
                   this.results.push({'value':row.value, 'count':row.num, 'average':row.average});

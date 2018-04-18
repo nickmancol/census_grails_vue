@@ -65,8 +65,9 @@ dependencies {
 bootRun {
     jvmArgs('-Dspring.output.ansi.enabled=always')
     addResources = true
+    systemProperties = System.properties
 }
 
-tasks.withType(org.springframework.boot.gradle.run.BootRunTask) {
+test {
     systemProperties = System.properties
 }
